@@ -24,6 +24,11 @@ unsigned product(unsigned, unsigned);
  * An integer to signal to the OS the exit code.
 *******************************************************************************/
 
+unsigned factWorker(unsigned n, unsigned acc);
+unsigned fibWorker(unsigned n, unsigned a, unsigned b);
+unsigned multWorker(unsigned x, unsigned y, unsigned acc);
+unsigned powerWorker(unsigned x, unsigned y, unsigned acc);
+unsigned productWorker(unsigned x, unsigned y, unsigned res);
 int main() {
     // try a ridiculous case that won't work without tail recursion
     cout << "6 * 123000 = " << mult(6, 123000) << endl;
@@ -46,61 +51,66 @@ int main() {
  * TODO: make them tail recursive :)
 *******************************************************************************/
 
-unsigned fact(unsigned n) {
+unsigned factWorker(unsigned n, unsigned res) {
     // base cases (combined)
     if (n <= 1) {
-        return 1;
+        return res;
     }
+        return factWorker(n - 1, res* n);
+    }
+    unsigned fact (unsigned n) {
+        return factWorker(n, 1);
+}  
 
-    // recursive case
-    unsigned res = fact(n - 1);
-    return res * n;
-}
-
-unsigned fib(unsigned n) {
+unsigned fibWorker(unsigned n, unsigned a, unsigned b) {
     // base case 1
     if (n == 0) {
-        return 0;
+        return a;
     }
 
     // base case 2
     else if (n == 1) {
-        return 1;
+        return b;
     }
-
-    // recursive case
-    return fib(n - 1) + fib(n - 2);
+        return fibWorker(n -1, b, a + b);
+    }
+    unsigned fib(unsigned n) {
+        return fibWorker(n, 0, 1);
 }
 
-unsigned mult(unsigned x, unsigned y) {
+unsigned multWorker(unsigned x, unsigned y, unsigned res) {
     // base case
     if (y == 0) {
-        return 0;
+        return res;
     }
-
-    // recursive case
-    unsigned res = mult(x, y - 1);
-    return res + x;
+        return multWorker(x, y - 1, res + x);
+    }
+    unsigned mult(unsigned x, unsigned y) {
+        if (y < x){
+            return multWorker(x, y, 0);
+        } else {
+            return multWorker(y, x, 0);
+    }
 }
 
-unsigned power(unsigned x, unsigned y) {
+unsigned powerWorker(unsigned x, unsigned y, unsigned res) {
     // base case
     if (y == 0) {
-        return 1;
+        return res;
     }
-
-    // recursive case
-    unsigned res = power(x, y - 1);
-    return res * x;
+        return powerWorker(x, y - 1, res* x);
+    }
+    unsigned power(unsigned x, unsigned y) {
+    return powerWorker(x, y, 1);
 }
 
-unsigned product(unsigned x, unsigned y) {
+unsigned productWorker(unsigned x, unsigned y, unsigned res) {
     // base case
-    if (x == y) {
-        return x;
+    if (x > y) {
+        return res;
     }
-
-    // recursive case
-    unsigned p = product(x + 1, y);
-    return p * x;
+    return productWorker(x + 1, y, res* x);
+    }
+    unsigned product(unsigned x, unsigned y) {
+        return productWorker(x, y, 1);
 }
